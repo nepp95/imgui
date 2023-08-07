@@ -1187,7 +1187,7 @@ struct ImGuiNextItemData
     ImGuiID                     FocusScopeId;           // Set by SetNextItemMultiSelectData() (!= 0 signify value has been set, so it's an alternate version of HasSelectionData, we don't use Flags for this because they are cleared too early. This is mostly used for debugging)
     ImGuiCond                   OpenCond;
     bool                        OpenVal;                // Set by SetNextItemOpen()
-    void*                       SelectionData;          // Set by SetNextItemSelectionData() (note that NULL/0 is a valid value)
+    void*                       SelectionUserData;      // Set by SetNextItemSelectionUserData() (note that NULL/0 is a valid value)
 
     ImGuiNextItemData()         { memset(this, 0, sizeof(*this)); }
     inline void ClearFlags()    { Flags = ImGuiNextItemDataFlags_None; ItemFlags = ImGuiItemFlags_None; } // Also cleared manually by ItemAdd()!
@@ -1626,7 +1626,7 @@ struct IMGUI_API ImGuiMultiSelectState
     ImS8                    RangeSelected;      // -1 (don't have) or true/false
     ImS8                    NavIdSelected;      // -1 (don't have) or true/false
     void*                   RangeSrcItem;       //
-    void*                   NavIdItem;          // SetNextItemSelectionData() value for NavId (if part of submitted items)
+    void*                   NavIdItem;          // SetNextItemSelectionUserData() value for NavId (if part of submitted items)
 
     ImGuiMultiSelectState() { Init(0); }
     void Init(ImGuiID id)   { Window = NULL; ID = id; LastFrameActive = 0; RangeSelected = NavIdSelected = -1; RangeSrcItem = NavIdItem = (void*)-1; }

@@ -6658,7 +6658,7 @@ bool ImGui::Selectable(const char* label, bool* p_selected, ImGuiSelectableFlags
 //-------------------------------------------------------------------------
 // - BeginMultiSelect()
 // - EndMultiSelect()
-// - SetNextItemSelectionData()
+// - SetNextItemSelectionUserData()
 // - MultiSelectItemHeader() [Internal]
 // - MultiSelectItemFooter() [Internal]
 // - DebugNodeMultiSelectState() [Internal]
@@ -6787,10 +6787,10 @@ ImGuiMultiSelectIO* ImGui::EndMultiSelect()
     return &ms->EndIO;
 }
 
-void ImGui::SetNextItemSelectionData(void* item_data)
+void ImGui::SetNextItemSelectionUserData(void* selection_user_data)
 {
     ImGuiContext& g = *GImGui;
-    g.NextItemData.SelectionData = item_data;
+    g.NextItemData.SelectionUserData = selection_user_data;
     g.NextItemData.FocusScopeId = g.CurrentFocusScopeId;
 
     // Note that the flag will be cleared by ItemAdd(), so it's only useful for Navigation code!
@@ -6799,7 +6799,7 @@ void ImGui::SetNextItemSelectionData(void* item_data)
 
     // Auto updating RangeSrcPassedBy for cases were clipper is not used (done before ItemAdd() clipping)
     if (ImGuiMultiSelectTempData* ms = g.CurrentMultiSelect)
-        if (ms->BeginIO.RangeSrcItem == item_data)
+        if (ms->BeginIO.RangeSrcItem == selection_user_data)
             ms->BeginIO.RangeSrcPassedBy = true;
 }
 
@@ -6811,8 +6811,8 @@ void ImGui::MultiSelectItemHeader(ImGuiID id, bool* p_selected)
         return;
     ImGuiMultiSelectState* storage = ms->Storage;
 
-    IM_ASSERT(g.NextItemData.FocusScopeId == g.CurrentFocusScopeId && "Forgot to call SetNextItemSelectionData() prior to item, required in BeginMultiSelect()/EndMultiSelect() scope");
-    void* item_data = g.NextItemData.SelectionData;
+    IM_ASSERT(g.NextItemData.FocusScopeId == g.CurrentFocusScopeId && "Forgot to call SetNextItemSelectionUserData() prior to item, required in BeginMultiSelect()/EndMultiSelect() scope");
+    void* item_data = g.NextItemData.SelectionUserData;
 
     // Apply Clear/SelectAll requests requested by BeginMultiSelect().
     // This is only useful if the user hasn't processed them already, and this only works if the user isn't using the clipper.
@@ -6869,7 +6869,7 @@ void ImGui::MultiSelectItemFooter(ImGuiID id, bool* p_selected, bool* p_pressed)
     if (!ms->IsFocused && !hovered)
         return;
 
-    void* item_data = g.NextItemData.SelectionData;
+    void* item_data = g.NextItemData.SelectionUserData;
     g.NextItemData.FocusScopeId = 0;
 
     const bool is_multiselect = (ms->Flags & ImGuiMultiSelectFlags_SingleSelect) == 0;

@@ -638,7 +638,7 @@ namespace ImGui
     // - Read comments near ImGuiMultiSelectIO for details.
     IMGUI_API ImGuiMultiSelectIO*   BeginMultiSelect(ImGuiMultiSelectFlags flags);
     IMGUI_API ImGuiMultiSelectIO*   EndMultiSelect();
-    IMGUI_API void                  SetNextItemSelectionData(void* item_data);
+    IMGUI_API void                  SetNextItemSelectionUserData(void* selection_user_data);
 
     // Widgets: List Boxes
     // - This is essentially a thin wrapper to using BeginChild/EndChild with some stylistic changes.
@@ -2477,7 +2477,7 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 //   performance penalty, but requires a little more work on the code. If you only have a few hundreds elements in your possible selection set,
 //   you may as well not bother with clipping, as the cost should be negligible (as least on Dear ImGui side).
 //   If you are not sure, always start without clipping and you can work your way to the more optimized version afterwards.
-// - The void* RangeSrcItem/RangeDstItem value represent a selectable object. They are the value you pass to SetNextItemSelectionData().
+// - The void* RangeSrcItem/RangeDstItem value represent a selectable object. They are the value you pass to SetNextItemSelectionUserData().
 //   Most likely you will want to store an index here.
 //   Storing an integer index is the easiest thing to do, as SetRange requests will give you two end points and you will need to interpolate
 //   between them to honor range selection. But the code never assume that sortable integers are used (you may store pointers to your object,
@@ -2488,7 +2488,7 @@ IM_MSVC_RUNTIME_CHECKS_RESTORE
 //   LOOP  - (3) [If using a clipper] Set RangeSrcPassedBy=true if the RangeSrcItem item is part of the items clipped before the first submitted/visible item.
 //               This is because for range-selection we need to know if we are currently "inside" or "outside" the range.
 //               If you are using integer indices everywhere, this is easy to compute: if (clipper.DisplayStart > (int)data->RangeSrcItem) { data->RangeSrcPassedBy = true; }
-//         - (4) Submit your items with SetNextItemSelectionData() + Selectable()/TreeNode() calls.
+//         - (4) Submit your items with SetNextItemSelectionUserData() + Selectable()/TreeNode() calls.
 //               (optionally call IsItemToggledSelection() to query if the selection state has been toggled for a given visible item, if you need that info immediately for your display, before EndMultiSelect())
 //   END   - (5) Call EndMultiSelect() and retrieve the ImGuiMultiSelectIO* result.
 //         - (6) Honor Clear/SelectAll/SetRange requests by updating your selection data. Always process them in this order (as you will receive Clear+SetRange request simultaneously). Can use same code as Step 2.
