@@ -6790,6 +6790,9 @@ ImGuiMultiSelectIO* ImGui::EndMultiSelect()
 void ImGui::SetNextItemSelectionUserData(ImGuiSelectionUserData selection_user_data)
 {
     ImGuiContext& g = *GImGui;
+    ImGuiMultiSelectTempData* ms = g.CurrentMultiSelect;
+    IM_ASSERT(ms != NULL && "Calling SetNextItemSelectionUserData() outside of BeginMultiSelect()/EndMultiSelect().");
+
     g.NextItemData.SelectionUserData = selection_user_data;
     g.NextItemData.FocusScopeId = g.CurrentFocusScopeId;
 
@@ -6798,9 +6801,8 @@ void ImGui::SetNextItemSelectionUserData(ImGuiSelectionUserData selection_user_d
     g.NextItemData.ItemFlags |= ImGuiItemFlags_HasSelectionUserData;
 
     // Auto updating RangeSrcPassedBy for cases were clipper is not used (done before ItemAdd() clipping)
-    if (ImGuiMultiSelectTempData* ms = g.CurrentMultiSelect)
-        if (ms->BeginIO.RangeSrcItem == selection_user_data)
-            ms->BeginIO.RangeSrcPassedBy = true;
+    if (ms->BeginIO.RangeSrcItem == selection_user_data)
+        ms->BeginIO.RangeSrcPassedBy = true;
 }
 
 void ImGui::MultiSelectItemHeader(ImGuiID id, bool* p_selected)
