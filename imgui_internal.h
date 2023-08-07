@@ -1184,10 +1184,10 @@ struct ImGuiNextItemData
     ImGuiNextItemDataFlags      Flags;
     ImGuiItemFlags              ItemFlags;              // Currently only tested/used for ImGuiItemFlags_AllowOverlap.
     float                       Width;                  // Set by SetNextItemWidth()
-    ImGuiID                     FocusScopeId;           // Set by SetNextItemMultiSelectData() (!= 0 signify value has been set, so it's an alternate version of HasSelectionData, we don't use Flags for this because they are cleared too early. This is mostly used for debugging)
+    ImGuiID                     FocusScopeId;           // Set by SetNextItemSelectionUserData() (!= 0 signify value has been set, so it's an alternate version of HasSelectionData, we don't use Flags for this because they are cleared too early. This is mostly used for debugging)
     ImGuiCond                   OpenCond;
     bool                        OpenVal;                // Set by SetNextItemOpen()
-    void*                       SelectionUserData;      // Set by SetNextItemSelectionUserData() (note that NULL/0 is a valid value)
+    ImGuiSelectionUserData      SelectionUserData;      // Set by SetNextItemSelectionUserData() (note that NULL/0 is a valid value, we use -1 == ImGuiSelectionUserData_Invalid to mark invalid values)
 
     ImGuiNextItemData()         { memset(this, 0, sizeof(*this)); }
     inline void ClearFlags()    { Flags = ImGuiNextItemDataFlags_None; ItemFlags = ImGuiItemFlags_None; } // Also cleared manually by ItemAdd()!
@@ -1598,6 +1598,9 @@ struct ImGuiOldColumns
 
 #ifdef IMGUI_HAS_MULTI_SELECT
 
+// We always assume that -1 is an invalid value (which works for indices and pointers)
+#define ImGuiSelectionUserData_Invalid        ((ImGuiSelectionUserData)-1)
+
 // Temporary storage for multi-select
 struct IMGUI_API ImGuiMultiSelectTempData
 {
@@ -1625,11 +1628,11 @@ struct IMGUI_API ImGuiMultiSelectState
     int                     LastFrameActive;    // Last used frame-count, for GC.
     ImS8                    RangeSelected;      // -1 (don't have) or true/false
     ImS8                    NavIdSelected;      // -1 (don't have) or true/false
-    void*                   RangeSrcItem;       //
-    void*                   NavIdItem;          // SetNextItemSelectionUserData() value for NavId (if part of submitted items)
+    ImGuiSelectionUserData  RangeSrcItem;       //
+    ImGuiSelectionUserData  NavIdItem;          // SetNextItemSelectionUserData() value for NavId (if part of submitted items)
 
     ImGuiMultiSelectState() { Init(0); }
-    void Init(ImGuiID id)   { Window = NULL; ID = id; LastFrameActive = 0; RangeSelected = NavIdSelected = -1; RangeSrcItem = NavIdItem = (void*)-1; }
+    void Init(ImGuiID id)   { Window = NULL; ID = id; LastFrameActive = 0; RangeSelected = NavIdSelected = -1; RangeSrcItem = NavIdItem = ImGuiSelectionUserData_Invalid; }
 };
 
 #endif // #ifdef IMGUI_HAS_MULTI_SELECT
