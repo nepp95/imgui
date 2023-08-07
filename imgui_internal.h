@@ -807,6 +807,7 @@ enum ImGuiItemFlags_
 
     // Controlled by widget code
     ImGuiItemFlags_Inputable                = 1 << 10, // false     // [WIP] Auto-activate input mode when tab focused. Currently only used and supported by a few items before it becomes a generic feature.
+    ImGuiItemFlags_HasSelectionUserData     = 1 << 11, // false     // Set by SetNextItemSelectionUserData()
 };
 
 // Status flags for an already submitted item
@@ -1176,15 +1177,14 @@ enum ImGuiNextItemDataFlags_
     ImGuiNextItemDataFlags_None             = 0,
     ImGuiNextItemDataFlags_HasWidth         = 1 << 0,
     ImGuiNextItemDataFlags_HasOpen          = 1 << 1,
-    ImGuiNextItemDataFlags_HasSelectionData = 1 << 2,
 };
 
 struct ImGuiNextItemData
 {
     ImGuiNextItemDataFlags      Flags;
-    ImGuiItemFlags              ItemFlags;              // Currently only tested/used for ImGuiItemFlags_AllowOverlap.
+    ImGuiItemFlags              ItemFlags;              // Currently only tested/used for ImGuiItemFlags_AllowOverlap and ImGuiItemFlags_HasSelectionUserData.
     float                       Width;                  // Set by SetNextItemWidth()
-    ImGuiID                     FocusScopeId;           // Set by SetNextItemSelectionUserData() (!= 0 signify value has been set, so it's an alternate version of HasSelectionData, we don't use Flags for this because they are cleared too early. This is mostly used for debugging)
+    ImGuiID                     FocusScopeId;           // Set by SetNextItemSelectionUserData()
     ImGuiCond                   OpenCond;
     bool                        OpenVal;                // Set by SetNextItemOpen()
     ImGuiSelectionUserData      SelectionUserData;      // Set by SetNextItemSelectionUserData() (note that NULL/0 is a valid value, we use -1 == ImGuiSelectionUserData_Invalid to mark invalid values)
@@ -1530,10 +1530,9 @@ struct ImGuiNavItemData
     float               DistBox;        //      Move    // Best candidate box distance to current NavId
     float               DistCenter;     //      Move    // Best candidate center distance to current NavId
     float               DistAxial;      //      Move    // Best candidate axial distance to current NavId
-    bool                HasSelectionData;//Init,Move    // Copy of (NextItemData.Flags & ImGuiNextItemDataFlags_HasSelection)
 
     ImGuiNavItemData()  { Clear(); }
-    void Clear()        { Window = NULL; ID = FocusScopeId = 0; InFlags = 0; DistBox = DistCenter = DistAxial = FLT_MAX; HasSelectionData = false; }
+    void Clear()        { Window = NULL; ID = FocusScopeId = 0; InFlags = 0; DistBox = DistCenter = DistAxial = FLT_MAX; }
 };
 
 //-----------------------------------------------------------------------------

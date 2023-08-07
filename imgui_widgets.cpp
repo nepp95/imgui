@@ -6158,7 +6158,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
 
     // Compute open and multi-select states before ItemAdd() as it clear NextItem data.
     bool is_open = TreeNodeUpdateNextOpen(id, flags);
-    const bool is_multi_select = (g.NextItemData.Flags & ImGuiNextItemDataFlags_HasSelectionData) != 0; // Before ItemAdd()
+    const bool is_multi_select = (g.NextItemData.ItemFlags & ImGuiItemFlags_HasSelectionUserData) != 0; // Before ItemAdd()
     bool item_add = ItemAdd(interact_bb, id);
     g.LastItemData.StatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
     g.LastItemData.DisplayRect = frame_bb;
@@ -6524,7 +6524,7 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     }
 
     const bool disabled_item = (flags & ImGuiSelectableFlags_Disabled) != 0;
-    const bool is_multi_select = (g.NextItemData.Flags & ImGuiNextItemDataFlags_HasSelectionData) != 0; // Before ItemAdd()
+    const bool is_multi_select = (g.NextItemData.ItemFlags & ImGuiItemFlags_HasSelectionUserData) != 0; // Before ItemAdd()
     const bool item_add = ItemAdd(bb, id, NULL, disabled_item ? ImGuiItemFlags_Disabled : ImGuiItemFlags_None);
 
     if (span_all_columns)
@@ -6795,7 +6795,7 @@ void ImGui::SetNextItemSelectionUserData(ImGuiSelectionUserData selection_user_d
 
     // Note that the flag will be cleared by ItemAdd(), so it's only useful for Navigation code!
     // This designed so widgets can also cheaply set this before calling ItemAdd(), so we are not tied to MultiSelect api.
-    g.NextItemData.Flags |= ImGuiNextItemDataFlags_HasSelectionData;
+    g.NextItemData.ItemFlags |= ImGuiItemFlags_HasSelectionUserData;
 
     // Auto updating RangeSrcPassedBy for cases were clipper is not used (done before ItemAdd() clipping)
     if (ImGuiMultiSelectTempData* ms = g.CurrentMultiSelect)
