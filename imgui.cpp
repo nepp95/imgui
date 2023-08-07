@@ -11011,7 +11011,7 @@ static void ImGui::NavApplyItemToResult(ImGuiNavItemData* result)
     result->FocusScopeId = g.CurrentFocusScopeId;
     result->InFlags = g.LastItemData.InFlags;
     result->RectRel = WindowRectAbsToRel(window, g.LastItemData.NavRect);
-    result->HasSelectionData = (g.NextItemData.Flags & ImGuiNextItemDataFlags_HasSelectionData) != 0; // FIXME: Bizarre but valid we are calling NavApplyItemToResult() before clering the NextItemData
+    result->HasSelectionData = (g.NextItemData.Flags & ImGuiNextItemDataFlags_HasSelectionData) != 0; // FIXME: Bizarre but valid we are calling NavApplyItemToResult() before clearing the NextItemData
 }
 
 // True when current work location may be scrolled horizontally when moving left / right.
@@ -13945,7 +13945,6 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     }
 
     // Details for MultiSelect
-    SetNextItemOpen(true, ImGuiCond_Once);
     if (TreeNode("MultiSelect", "MultiSelect (%d)", g.MultiSelectStorage.GetAliveCount()))
     {
         for (int n = 0; n < g.MultiSelectStorage.GetMapSize(); n++)
