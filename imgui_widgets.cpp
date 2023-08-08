@@ -116,6 +116,18 @@ static const ImU64          IM_U64_MAX = ULLONG_MAX; // (0xFFFFFFFFFFFFFFFFull);
 static const ImU64          IM_U64_MAX = (2ULL * 9223372036854775807LL + 1);
 #endif
 
+// Format specifiers, printing 64-bit hasn't been decently standardized...
+// In a real application you should be using PRId64 and PRIu64 from <inttypes.h> (non-windows) and on Windows define them yourself.
+#ifdef _MSC_VER
+#define IM_PRId64   "I64d"
+#define IM_PRIu64   "I64u"
+#define IM_PRIX64   "I64X"
+#else
+#define IM_PRId64   "lld"
+#define IM_PRIu64   "llu"
+#define IM_PRIX64   "llX"
+#endif
+
 //-------------------------------------------------------------------------
 // [SECTION] Forward Declarations
 //-------------------------------------------------------------------------
@@ -6672,7 +6684,7 @@ static void DebugLogMultiSelectRequests(const char* function, const ImGuiMultiSe
     ImGuiContext& g = *GImGui;
     if (data->RequestClear)     IMGUI_DEBUG_LOG_SELECTION("[selection] %s: RequestClear\n", function);
     if (data->RequestSelectAll) IMGUI_DEBUG_LOG_SELECTION("[selection] %s: RequestSelectAll\n", function);
-    if (data->RequestSetRange)  IMGUI_DEBUG_LOG_SELECTION("[selection] %s: RequestSetRange %p..%p = %d (dir %+d)\n", function, (void*)data->RangeSrcItem, (void*)data->RangeDstItem, data->RangeSelected, data->RangeDirection);
+    if (data->RequestSetRange)  IMGUI_DEBUG_LOG_SELECTION("[selection] %s: RequestSetRange %" IM_PRId64 "..%" IM_PRId64 " (0x%" IM_PRIX64 "..0x%" IM_PRIX64 ") = %d (dir %+d)\n", function, data->RangeSrcItem, data->RangeDstItem, data->RangeSrcItem, data->RangeDstItem, data->RangeSelected, data->RangeDirection);
 }
 
 // Return ImGuiMultiSelectIO structure. Lifetime: valid until corresponding call to EndMultiSelect().
@@ -7001,8 +7013,8 @@ void ImGui::DebugNodeMultiSelectState(ImGuiMultiSelectState* storage)
     if (!is_active) { PopStyleColor(); }
     if (!open)
         return;
-    Text("RangeSrcItem = %p, RangeSelected = %d", (void*)storage->RangeSrcItem, storage->RangeSelected);
-    Text("NavIdData = %p, NavIdSelected = %d", (void*)storage->NavIdItem, storage->NavIdSelected);
+    Text("RangeSrcItem = %" IM_PRId64 " (0x%" IM_PRIX64 "), RangeSelected = %d", storage->RangeSrcItem, storage->RangeSrcItem, storage->RangeSelected);
+    Text("NavIdItem = %" IM_PRId64 " (0x%" IM_PRIX64 "), NavIdSelected = %d", storage->NavIdItem, storage->NavIdItem, storage->NavIdSelected);
     TreePop();
 #else
     IM_UNUSED(storage);
