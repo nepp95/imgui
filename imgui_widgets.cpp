@@ -6714,7 +6714,6 @@ ImGuiMultiSelectIO* ImGui::BeginMultiSelect(ImGuiMultiSelectFlags flags)
     storage->Window = window;
     ms->Storage = storage;
 
-    // FIXME-MULTISELECT: Index vs Pointers.
     // We want EndIO's NavIdItem/NavIdSelected to match BeginIO's one, so the value never changes after EndMultiSelect()
     ms->BeginIO.RangeSrcItem = ms->EndIO.RangeSrcItem = storage->RangeSrcItem;
     ms->BeginIO.NavIdItem = ms->EndIO.NavIdItem = storage->NavIdItem;

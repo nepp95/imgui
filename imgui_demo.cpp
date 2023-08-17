@@ -2636,7 +2636,7 @@ struct ExampleSelection
     // Functions
     ExampleSelection()                  { Clear(); }
     void Clear()                        { Storage.Clear(); SelectionSize = 0; QueueDeletion = false; }
-    bool GetSelected(int n) const       { return Storage.GetInt((ImGuiID)n, 0) != 0; }
+    bool Contains(int n) const          { return Storage.GetInt((ImGuiID)n, 0) != 0; }
     void SetSelected(int n, bool v)     { int* p_int = Storage.GetIntRef((ImGuiID)n, 0); if (*p_int == (int)v) return; if (v) SelectionSize++; else SelectionSize--; *p_int = (bool)v; }
     int  GetSize() const                { return SelectionSize; }
 
@@ -2680,20 +2680,20 @@ struct ExampleSelection
         QueueDeletion = false;
 
         // If current item is not selected.
-        if (ms_io->NavIdSelected == false)      // Here 'NavIdSelected' should be == to 'GetSelected(ms_io->NavIdData)'
+        if (ms_io->NavIdSelected == false)  // Here 'NavIdSelected' should be == to 'GetSelected(ms_io->NavIdData)'
         {
-            ms_io->RangeSrcReset = true;        // Request to recover RangeSrc from NavId next frame. Would be ok to reset even without the !NavIdSelected test but it would take an extra frame to recover RangeSrc when deleting a selected item.
-            return (int)ms_io->NavIdItem;       // Request to land on same item after deletion.
+            ms_io->RangeSrcReset = true;    // Request to recover RangeSrc from NavId next frame. Would be ok to reset even without the !NavIdSelected test but it would take an extra frame to recover RangeSrc when deleting a selected item.
+            return (int)ms_io->NavIdItem;   // Request to land on same item after deletion.
         }
 
         // If current item is selected: land on first unselected item after RangeSrc.
         for (int n = (int)ms_io->RangeSrcItem + 1; n < items.Size; n++)
-            if (!GetSelected(n))
+            if (!Contains(n))
                 return n;
 
         // If current item is selected: otherwise return last unselected item.
         for (int n = IM_MIN((int)ms_io->RangeSrcItem, items.Size) - 1; n >= 0; n--)
-            if (!GetSelected(n))
+            if (!Contains(n))
                 return n;
 
         return -1;
@@ -2717,7 +2717,7 @@ struct ExampleSelection
         int next_focus_idx_in_new_selection = -1;
         for (int n = 0; n < items.Size; n++)
         {
-            if (!GetSelected(n))
+            if (!Contains(n))
                 new_items.push_back(items[n]);
             if (next_focus_idx_in_old_selection == n)
                 next_focus_idx_in_new_selection = new_items.Size - 1;
@@ -2754,8 +2754,8 @@ static void ShowDemoWindowMultiSelect()
         }
 
         // Demonstrate implementation a most-basic form of multi-selection manually
-        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (simplfied, manual)");
-        if (ImGui::TreeNode("Multiple Selection (simplified, manual)"))
+        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (simplfied, without using BeginMultiSelect)");
+        if (ImGui::TreeNode("Multiple Selection (simplified, without using BeginMultiSelect)"))
         {
             HelpMarker("Hold CTRL and click to select multiple items.");
             static bool selection[5] = { false, false, false, false, false };
@@ -2782,9 +2782,9 @@ static void ShowDemoWindowMultiSelect()
 
         // Demonstrate holding/updating multi-selection data using the BeginMultiSelect/EndMultiSelect API.
         // SHIFT+Click w/ CTRL and other standard features are supported.
-        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (full)");
+        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection");
         //ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-        if (ImGui::TreeNode("Multiple Selection (full)"))
+        if (ImGui::TreeNode("Multiple Selection"))
         {
             static ExampleSelection selection;
 
@@ -2809,7 +2809,7 @@ static void ShowDemoWindowMultiSelect()
                 {
                     char label[64];
                     sprintf(label, "Object %05d: %s", n, random_names[n % IM_ARRAYSIZE(random_names)]);
-                    bool item_is_selected = selection.GetSelected(n);
+                    bool item_is_selected = selection.Contains(n);
                     ImGui::SetNextItemSelectionUserData(n);
                     ImGui::Selectable(label, item_is_selected);
                 }
@@ -2831,8 +2831,8 @@ static void ShowDemoWindowMultiSelect()
         // - (3) BeginXXXX process
         // - (4) Focus process
         // - (5) EndXXXX process
-        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (full, with deletion)");
-        if (ImGui::TreeNode("Multiple Selection (full, with deletion)"))
+        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (with deletion)");
+        if (ImGui::TreeNode("Multiple Selection (with deletion)"))
         {
             // Intentionally separating items data from selection data!
             // But you may decide to store selection data inside your item (aka intrusive storage).
@@ -2878,7 +2878,7 @@ static void ShowDemoWindowMultiSelect()
                     char label[64];
                     sprintf(label, "Object %05d: %s", item_id, random_names[item_id % IM_ARRAYSIZE(random_names)]);
 
-                    bool item_is_selected = selection.GetSelected(n);
+                    bool item_is_selected = selection.Contains(n);
                     ImGui::SetNextItemSelectionUserData(n);
                     ImGui::Selectable(label, item_is_selected);
                     if (ImGui::IsItemToggledSelection())
@@ -2899,8 +2899,8 @@ static void ShowDemoWindowMultiSelect()
         }
 
         // Demonstrate individual selection scopes in same window
-        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (full, multiple scopes)");
-        if (ImGui::TreeNode("Multiple Selection (full, multiple scopes)"))
+        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (multiple scopes)");
+        if (ImGui::TreeNode("Multiple Selection (multiple scopes)"))
         {
             const int SCOPES_COUNT = 3;
             const int ITEMS_COUNT = 8; // Per scope
@@ -2921,7 +2921,7 @@ static void ShowDemoWindowMultiSelect()
                 {
                     char label[64];
                     sprintf(label, "Object %05d: %s", n, random_names[n % IM_ARRAYSIZE(random_names)]);
-                    bool item_is_selected = selection->GetSelected(n);
+                    bool item_is_selected = selection->Contains(n);
                     ImGui::SetNextItemSelectionUserData(n);
                     ImGui::Selectable(label, item_is_selected);
                 }
@@ -2940,9 +2940,9 @@ static void ShowDemoWindowMultiSelect()
         // - Showcase basic drag and drop.
         // - Showcase TreeNode variant (note that tree node don't expand in the demo: supporting expanding tree nodes + clipping a separate thing).
         // - Showcase using inside a table.
-        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (full, advanced)");
+        IMGUI_DEMO_MARKER("Widgets/Selection State/Multiple Selection (advanced)");
         //ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-        if (ImGui::TreeNode("Multiple Selection (full, advanced)"))
+        if (ImGui::TreeNode("Multiple Selection (advanced)"))
         {
             // Options
             enum WidgetType { WidgetType_Selectable, WidgetType_TreeNode };
@@ -3045,7 +3045,7 @@ static void ShowDemoWindowMultiSelect()
                             ImGui::SameLine();
                         }
 
-                        bool item_is_selected = selection.GetSelected(n);
+                        bool item_is_selected = selection.Contains(n);
                         ImGui::SetNextItemSelectionUserData(n);
                         if (widget_type == WidgetType_Selectable)
                         {
