@@ -5,6 +5,10 @@ project "imgui"
     targetdir ("%{wks.location}/Bin/" .. OutputDir .. "/%{prj.name}")
     objdir ("%{wks.location}/Bin-Int/" .. OutputDir .. "/%{prj.name}")
 
+    includedirs {
+        "%{IncludeDir.glm}"
+    }
+
     files {
         "imconfig.h",
 		"imgui.h",
