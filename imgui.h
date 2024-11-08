@@ -354,9 +354,17 @@ namespace ImGui
     IMGUI_API const char*   GetVersion();                               // get the compiled version string e.g. "1.80 WIP" (essentially the value for IMGUI_VERSION from the compiled version of imgui.cpp)
 
     // Styles
-    IMGUI_API void          StyleColorsDark(ImGuiStyle* dst = NULL);    // new, recommended style (default)
+    IMGUI_API void          StyleColorsDark(ImGuiStyle* dst = NULL);    // new, recommended style
     IMGUI_API void          StyleColorsLight(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font
     IMGUI_API void          StyleColorsClassic(ImGuiStyle* dst = NULL); // classic imgui style
+
+    IMGUI_API void          StyleColorsDarkLinear(ImGuiStyle* dst = NULL);    // new, recommended style in linear format
+    IMGUI_API void          StyleColorsLightLinear(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font, in linear format
+    IMGUI_API void          StyleColorsClassicLinear(ImGuiStyle* dst = NULL); // classic imgui style in linear format
+
+    IMGUI_API void          StyleColorsDarkSRGB(ImGuiStyle* dst = NULL);    // new, recommended style in SRGB format
+    IMGUI_API void          StyleColorsLightSRGB(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font, in SRGB format
+    IMGUI_API void          StyleColorsClassicSRGB(ImGuiStyle* dst = NULL); // classic imgui style in SRGB format
 
     // Windows
     // - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.
