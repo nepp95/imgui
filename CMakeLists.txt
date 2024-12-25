@@ -15,3 +15,5 @@ file(GLOB_RECURSE SOURCES
 )
 
 add_library(imgui STATIC ${SOURCES})
+
+target_include_directories(imgui PRIVATE "../glm")
