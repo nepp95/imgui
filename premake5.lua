@@ -8,7 +8,7 @@ project "imgui"
     objdir ("%{wks.location}/Bin-Int/" .. OutputDir .. "/%{prj.name}")
 
     defines {
-        "IMGUI_IMPL_VULKAN_USE_VOLK"
+        "VK_NO_PROTOTYPES"
     }
 
     files {
@@ -27,7 +27,6 @@ project "imgui"
     includedirs {
         "%{IncludeDir.glfw}",
         "%{IncludeDir.imgui}",
-        "%{IncludeDir.volk}",
         "%{IncludeDir.vulkan}"
     }
 
