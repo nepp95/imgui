@@ -360,6 +360,14 @@ namespace ImGui
     IMGUI_API void          StyleColorsLight(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font
     IMGUI_API void          StyleColorsClassic(ImGuiStyle* dst = NULL); // classic imgui style
 
+    IMGUI_API void          StyleColorsDarkLinear(ImGuiStyle* dst = NULL);
+    IMGUI_API void          StyleColorsLightLinear(ImGuiStyle* dst = NULL);
+    IMGUI_API void          StyleColorsClassicLinear(ImGuiStyle* dst = NULL);
+
+    IMGUI_API void          StyleColorsDarkSRGB(ImGuiStyle* dst = NULL);
+    IMGUI_API void          StyleColorsLightSRGB(ImGuiStyle* dst = NULL);
+    IMGUI_API void          StyleColorsClassicSRGB(ImGuiStyle* dst = NULL);
+
     // Windows
     // - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.
     // - Passing 'bool* p_open != NULL' shows a window-closing widget in the upper-right corner of the window,
