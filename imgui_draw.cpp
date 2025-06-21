@@ -181,7 +181,7 @@ using namespace IMGUI_STB_NAMESPACE;
 
 void ImGui::StyleColorsDark(ImGuiStyle* dst)
 {
-    const bool srgb = GImGui ? GImGui->IO.ConfigFlags &= ImGuiConfigFlags_IsSRGB : false;
+    const bool srgb = GImGui ? GImGui->IO.ConfigFlags & ImGuiConfigFlags_IsSRGB : false;
 
     if (srgb)
         StyleColorsDarkSRGB(dst);
@@ -191,7 +191,7 @@ void ImGui::StyleColorsDark(ImGuiStyle* dst)
 
 void ImGui::StyleColorsClassic(ImGuiStyle* dst)
 {
-    const bool srgb = GImGui ? GImGui->IO.ConfigFlags &= ImGuiConfigFlags_IsSRGB : false;
+    const bool srgb = GImGui ? GImGui->IO.ConfigFlags & ImGuiConfigFlags_IsSRGB : false;
 
     if (srgb)
         StyleColorsClassicSRGB(dst);
@@ -202,7 +202,7 @@ void ImGui::StyleColorsClassic(ImGuiStyle* dst)
 // Those light colors are better suited with a thicker font than the default one + FrameBorder
 void ImGui::StyleColorsLight(ImGuiStyle* dst)
 {
-    const bool srgb = GImGui ? GImGui->IO.ConfigFlags &= ImGuiConfigFlags_IsSRGB : false;
+    const bool srgb = GImGui ? GImGui->IO.ConfigFlags & ImGuiConfigFlags_IsSRGB : false;
 
     if (srgb)
         StyleColorsLightSRGB(dst);
