@@ -18,8 +18,6 @@ project "imgui"
         "backends/imgui_impl_glfw.h",
         "backends/imgui_impl_vulkan.cpp",
         "backends/imgui_impl_vulkan.h",
-        "misc/cpp/imgui_stdlib.cpp",
-        "misc/cpp/imgui_stdlib.h",
         "misc/debuggers/imgui.natvis",
         "misc/debuggers/imgui.natstepfilter",
     }
